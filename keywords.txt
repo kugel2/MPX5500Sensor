@@ -1,0 +1,4 @@
+MPX5500Sensor	KEYWORD1
+readRawValue	KEYWORD2
+readBarValue	KEYWORD2
+readKpaValue	KEYWORD2
