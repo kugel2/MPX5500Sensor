@@ -1,9 +1,10 @@
 #include "Arduino.h"
 #include "MPX5500Sensor.h"
 
-MPX5500Sensor::MPX5500Sensor(int pin) {
+MPX5500Sensor::MPX5500Sensor(int pin, int zeroOffset) {
   pinMode(pin, OUTPUT);
   _pin = pin;
+  _zeroOffset = zeroOffset;
 }
 
 int MPX5500Sensor::readRawValue() {
@@ -25,7 +26,12 @@ int MPX5500Sensor::readKpaValue() {
   v = v / 1024; // ADC resolution
   v = v * 1000; // Vref [mV]
   v = v / 5600; // R1 [ohm]
-  v = v / 9; // mV per kPa
+  if (_zeroOffset > v) {
+    v = 0;
+  } else {
+    v = v - _zeroOffset;
+  }
+  v = v / 9; // 9mV per kPa
   
   return v; // truncate unsigned long to int, sensor max kPa value is 500, so v should be in int range
   
